@@ -9,7 +9,7 @@ const INITIAL_STATE = {
 function userReducer(state = INITIAL_STATE, action) {
   switch (action.type) {
   case EMAIL_ACTION:
-    return { ...state, ...action.payload };
+    return { ...state, ...action.user };
   default:
     return state;
   }

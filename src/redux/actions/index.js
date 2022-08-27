@@ -1,6 +1,6 @@
 export const EMAIL_ACTION = 'EMAIL_ACTION';
 
-export const addEmailAction = (payload) => ({
+export const addEmailAction = (user) => ({
   type: EMAIL_ACTION,
-  payload,
+  user,
 });
