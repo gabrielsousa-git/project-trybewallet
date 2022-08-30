@@ -17,7 +17,7 @@ class Header extends Component {
         <div
           data-testid="email-field"
         >
-          { userEmail.email }
+          { userEmail }
         </div>
         <p data-testid="total-field">
           { totalExpenses }
@@ -32,13 +32,11 @@ class Header extends Component {
 }
 
 const mapStateToProps = (state) => ({
-  userEmail: state.user,
+  userEmail: state.user.email,
 });
 
 Header.propTypes = {
-  userEmail: propTypes.shape({
-    email: propTypes.string.isRequired,
-  }).isRequired,
+  userEmail: propTypes.string.isRequired,
 };
 
 export default connect(mapStateToProps)(Header);
