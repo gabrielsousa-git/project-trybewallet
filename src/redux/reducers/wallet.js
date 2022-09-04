@@ -1,7 +1,16 @@
-import { GET_CURRENCIES, REQUEST_CURRENCIES, FAILED_REQUEST } from '../actions';
+import {
+  GET_CURRENCIES,
+  REQUEST_CURRENCIES,
+  FAILED_REQUEST,
+  EXPENSES_ACTION,
+} from '../actions';
 
 const INITIAL_STATE = {
-  currencies: [],
+  currencies: [], // array de string
+  expenses: [], // array de objetos, com cada objeto tendo as chaves id, value, currency, method, tag, description e exchangeRates
+  editor: false, // valor booleano que indica de uma despesa está sendo editada
+  idToEdit: 0, // valor numérico que armazena o id da despesa que esta sendo editada
+  total: 0,
 };
 
 function walletReducer(state = INITIAL_STATE, action) {
@@ -9,9 +18,27 @@ function walletReducer(state = INITIAL_STATE, action) {
   case REQUEST_CURRENCIES:
     return { ...state };
   case GET_CURRENCIES:
-    return { ...state, currencies: Object.keys(action.currencies) };
+    return { ...state,
+      currencies: Object.keys(action.currencies)
+        .filter((currency) => currency !== 'USDT') };
   case FAILED_REQUEST:
     return { ...state, Error };
+  case EXPENSES_ACTION:
+    return { ...state,
+      expenses: [
+        ...state.expenses, {
+          ...action.expenses,
+          id: state.expenses.length,
+        },
+      ],
+      total: [...state.expenses, action.expenses].reduce(
+        (acc, { value, currency, exchangeRates }) => {
+          const exchendedValue = acc + value * exchangeRates[currency].ask;
+          return exchendedValue;
+        },
+        0,
+      ),
+    };
   default:
     return state;
   }

@@ -30,3 +30,40 @@ export const fetchCurrencies = () => async (dispatch) => {
     .then((json) => dispatch(getCurrencies(json)))
     .catch((error) => dispatch(failedRequest(error)));
 };
+
+export const EXPENSES_ACTION = 'EXPENSES_ACTION';
+
+const addExpenses = (expenses) => ({
+  type: EXPENSES_ACTION,
+  expenses,
+});
+
+// export const fetchAddExpenses = (expenses) => async (dispatch) => {
+//   const { value, description, currency, method, tag } = expenses;
+//   const currencies = await fetch('https://economia.awesomeapi.com.br/json/all');
+//   const currenciesJson = await currencies.json();
+//   delete currenciesJson.USDT;
+//   const expense = {
+//     id: 0,
+//     value,
+//     description,
+//     currency,
+//     method,
+//     tag,
+//     currencies: currenciesJson,
+//   };
+//   dispatch(addExpenses(expense));
+// };
+
+export const fetchAddExpenses = (expenses) => (
+  async (dispatch) => {
+    dispatch(requestCurrencies());
+    try {
+      const response = await fetch('https://economia.awesomeapi.com.br/json/all');
+      const exchangeRates = await response.json();
+      dispatch(addExpenses({ id: 0, ...expenses, exchangeRates }));
+    } catch (error) {
+      dispatch(failedRequest(error));
+    }
+  }
+);
